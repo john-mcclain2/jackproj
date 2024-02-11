@@ -1,0 +1,89 @@
+import instaloader
+from instagrapi import Client
+from instaloader import Hashtag, Profile
+import json
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+
+
+
+class SetEncoder(json.JSONEncoder):
+
+  def default(self, obj):
+    if isinstance(obj, set):
+      return list(obj)
+    return json.JSONEncoder.default(self, obj)
+
+#######################################################
+#sign into firebase
+# Initialize Firebase with your credentials
+cred = credentials.Certificate("jackproj-a9250-firebase-adminsdk-xiiqt-9ee4eafaf5.json")
+firebase_admin.initialize_app(cred)
+# Get a reference to the Firestore database
+db = firestore.client()
+# Create a document
+collection = "https://console.firebase.google.com/project/jackproj-a9250/database/jackproj-a9250-default-rtdb/data/~2F"
+document_data = {
+    "followdate":"30/12/2023",
+    "followee":"test1",
+    "unfollowdate":"30/12/2023"
+}
+def create_document(collection, document_data):
+    doc_ref = db.collection(collection).add(document_data)
+    print("Document created with ID:", doc_ref.id)
+
+# Read documents
+def read_documents(collection):
+    docs = db.collection(collection).get()
+    for doc in docs:
+        print(f"{doc.id} => {doc.to_dict()}")
+
+create_document(collection, document_data
+#######################################################
+# # get Jack static vars
+# USERNAME = "jack_mcclain"
+
+# jackFollowList = []
+
+# L = instaloader.Instaloader()
+# L.login("johnmcclain497", "42163Jmc&")
+# profile = Profile.from_username(L.context, USERNAME)
+
+# for follower in profile.get_followers():
+#   jackFollowList.append(follower.username)
+# jackNumFollowers = len(jackFollowList)
+
+# # #######################################################
+
+# hashtagList = [
+#     'gym', 'fitness', 'fit', 'workout', 'weightlifting', 'pickleball'
+# ]
+# hashtagList.append('athlete')
+# numPostsPerTag = 10
+# cl = Client()
+# cl.login("johnmcclain497", "42163Jmc&")
+
+# userTagMap = {}
+# try:
+#   for tag in hashtagList:
+#     lst = cl.hashtag_medias_top(tag, amount=numPostsPerTag)
+#     for post in lst:
+#       postUser = post.user.username
+#       userPostSet = set(
+#       ) if postUser not in userTagMap else userTagMap[postUser]
+#       userPostSet.add(tag)
+#       userTagMap[postUser] = userPostSet
+
+#   usersToFollow = []
+#   for key in userTagMap:
+#     userTagMap[key] = list(userTagMap[key])
+#     if (key not in jackFollowList):
+#       usersToFollow.append(key)
+
+#   print(json.dumps(userTagMap))
+
+# except Exception as e:
+#   print(f"Error: Hashtag  not found or access denied: {e}")
+# finally:
+#   cl.logout()
