@@ -12,12 +12,14 @@ from datetime import datetime
 #######################################################
 # Function to create a document in the firebase store
 def create_document(collection, document_data):
+  print("in create_document")
   doc_ref = db.collection(collection).add(document_data)
   print("Document created with ID:", doc_ref[1].id)
 
 
 # Function to fetch data from the firebase store and convert it to a Python dictionary
 def fetch_followees_to_set(collection):
+  print("in fetch_followees_to_set")
   docs = db.collection(collection).get()
   for doc in docs:
     followee_set.add(doc.to_dict()["followee"])
@@ -45,7 +47,9 @@ USERNAME = "jack_mcclain"
 jackFollowList = []
 
 L = instaloader.Instaloader()
-L.login("johnmcclain497", "42163Jmc&")
+#L.login("johnmcclain497", "42163Jmc@")
+L.login("Jmcclain1234", "42163Jmc!@#$")
+
 profile = Profile.from_username(L.context, USERNAME)
 
 for follower in profile.get_followers():
@@ -61,13 +65,13 @@ hashtagList = [
 ]
 hashtagList.append('athlete')
 
-numPostsPerTag = 100
+numPostsPerTag = 10
 #login to instagram and get posts having those tags above
 #from those posts, get their users
 #but only get users if they have > 1 tag in their listing of posts
 #put the users in that list to a firebase database
 cl = Client()
-cl.login("johnmcclain497", "42163Jmc&")
+cl.login("Jmcclain1234", "42163Jmc!@#$")
 
 #map of users to their posts having tags above, for those users that are already not in
 #the database, and if the post is not tagged with an already used tag
@@ -80,14 +84,14 @@ try:
     lst = cl.hashtag_medias_top(tag, amount=numPostsPerTag)
     for post in lst:
       postUser = post.user.username
+      print(f"checking: {postUser}")
       if (postUser not in followee_set):
         if (postUser not in userTagMap):
           postSet = set()
           postSet.add("https://www.instagram.com/p/" + post.code + "," + tag)
           userTagMap[postUser] = postSet
         else:
-          not_contained_tag = all(tag not in postUrlAndTag
-                                  for postUrlAndTag in userTagMap[postUser])
+          not_contained_tag = all(tag not in postUrlAndTag for postUrlAndTag in userTagMap[postUser])
           #tagPost = "https://www.instagram.com/p/" + post.code
           #not_contained_post = all(tagPost not in postUrlAndTag
           #for postUrlAndTag in userTagMap[postUser])

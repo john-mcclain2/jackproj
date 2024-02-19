@@ -53,7 +53,7 @@ db.close()
 #follow those users who have not been folllowed
 #######################################################
 cl = Client()
-cl.login("johnmcclain497", "42163Jmc&")
+cl.login("Jmcclain1234", "42163Jmc!@#$")
 
 try:
   cnt = 0

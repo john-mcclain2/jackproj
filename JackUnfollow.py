@@ -5,6 +5,7 @@ from firebase_admin import credentials, firestore
 from datetime import datetime
 import time
 
+
 # Function to fetch data from the firebase store and convert it to a Python dictionary
 def fetch_followees_to_set(collection):
   docs = db.collection(collection).get()
@@ -12,12 +13,13 @@ def fetch_followees_to_set(collection):
     followee_set.add(doc)
   return followee_set
 
+
 # Function to follow a document_id
 def updateDoc(document_id):
 
   # Get a reference to the document
   doc_ref = db.collection(collection).document(document_id)
-  
+
   # Get the current date and time
   current_date_time = datetime.now()
 
@@ -31,6 +33,7 @@ def updateDoc(document_id):
   }
 
   doc_ref.update(update_data)
+
 
 #==============================================================
 # Initialize Firebase with your credentials and get a reference
@@ -50,21 +53,21 @@ db.close()
 #follow those users who have not been folllowed
 #######################################################
 cl = Client()
-cl.login("johnmcclain497", "42163Jmc&")
+cl.login("Jmcclain1234", "42163Jmc!@#$")
 
 try:
   cnt = 0
   numToFollow = 5
-  
+
   for usrDoc in followee_set:
-    
+
     try:
       docId = usrDoc.id
       usr = usrDoc.to_dict()
       followdate = usr["followdate"]
       unfollowdate = usr["unfollowdate"]
       followee = usr["followee"]
-  
+
       if (followdate != "" and unfollowdate == "" and cnt < numToFollow):
         cnt = cnt + 1
         followeeInfo = cl.user_info_by_username(followee).model_dump()
@@ -80,4 +83,3 @@ except Exception as f:
   print(f"Error: {f}")
 finally:
   cl.logout()
-  
